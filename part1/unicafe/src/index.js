@@ -29,6 +29,12 @@ const Statistics = ({good, neutral, bad}) => {
   const all = good + neutral + bad
   const avg = (good - bad) / all
   const pct = (good / all) * 100
+  if(good === 0 && neutral === 0 && bad === 0) {
+    return (
+      <p>No feedback given</p>
+    )
+  }
+  
   return (
     <table>
       <tbody>
@@ -52,16 +58,7 @@ const App = () => {
   let setGoodFunc = () => setToValue(good, setGood)
   let setNeutralFunc = () => setToValue(neutral, setNeutral)
   let setBadFunc = () => setToValue(bad, setBad)
-  if(good === 0 && neutral === 0 && bad === 0) {
-    return (
-      <div>
-        <h2>Give Feedback</h2>
-        <Buttons btns={["good", setGoodFunc, "neutral", setNeutralFunc, "bad", setBadFunc]} />
-        <h2>Statistics</h2>
-        <p>No feedback given</p>
-      </div>
-    )
-  }
+
   return (
     <div>
       <h2>Give Feedback</h2>
