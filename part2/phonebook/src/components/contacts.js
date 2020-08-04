@@ -1,11 +1,14 @@
 import React from 'react'
 
-const Contacts = ({names, filter}) => {
+const Contacts = ({names, filter, delContact}) => {
     let namesList = []
+
     if(filter === '') {
       namesList = names.map(person => {
         return(
-          <li key={person.name}>{person.name} {person.number}</li>
+          <li key={person.name}>{person.name} {person.number}
+            <button onClick={() => delContact(person.id, person.name)}>Delete</button>
+          </li>
         )
       })
     }else{
@@ -15,7 +18,9 @@ const Contacts = ({names, filter}) => {
   
       namesList = filtered.map(person => {
         return(
-          <li key={person.name}>{person.name} {person.number}</li>
+          <li key={person.name}> {person.name} {person.number}
+            <button onClick={() => delContact(person.id, person.name)}>Delete</button>
+          </li>
         )
       })
     }
