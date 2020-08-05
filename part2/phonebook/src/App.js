@@ -3,6 +3,8 @@ import Filter from './components/contact-filter'
 import Contacts from './components/contacts'
 import ContactForm from './components/contact-form'
 import personsServices from './services/persons'
+import Notification from './components/Notification'
+import ErrorNotif from './components/ErrorNotif'
 
 
 const App = () => {
@@ -10,6 +12,8 @@ const App = () => {
   const [ newFilter, setNewFilter ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ addedNotification, setAddedNotification ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
   useEffect(() => {
     personsServices
@@ -32,6 +36,14 @@ const addContact = (event) => {
           setPersons(persons.map(person => person.id !== returnedContact.id ? person : returnedContact))
           setNewName('')
           setNewNumber('')
+          return returnedContact
+        })
+        .catch(error => {
+          setErrorMessage(`${newName} was removed from server. Click ADD again to create new contact for ${newName}`)
+          setPersons(persons.filter(person => person.name !== newName))
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
     }
   }else{
@@ -46,6 +58,12 @@ const addContact = (event) => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setAddedNotification(
+          `${returnedPerson.name} was added`
+        )
+        setTimeout(() => {
+          setAddedNotification(null)
+        }, 3000)
       })
   }
 }
@@ -64,7 +82,12 @@ const handleChangeNumber = (event) => setNewNumber(event.target.value)
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter value={newFilter} handleChange={handleChangeFilter} />
+      <Notification message={addedNotification} />
+      <ErrorNotif message={errorMessage} />
+      <Filter 
+        value={newFilter} 
+        handleChange={handleChangeFilter} 
+      />
       <h2>Add New</h2>
       <ContactForm 
         addContact={addContact}
@@ -77,7 +100,8 @@ const handleChangeNumber = (event) => setNewNumber(event.target.value)
       <Contacts 
         names={persons} 
         filter={newFilter}
-        delContact={delContact} />
+        delContact={delContact} 
+      />
     </div>
     
   )
