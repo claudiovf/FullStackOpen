@@ -1,11 +1,13 @@
 const express = require('express')
 const morgan = require('morgan')
-
+const cors = require('cors')
 
 const app = express()
 
 
 morgan.token('data', req => JSON.stringify(req.body))
+
+app.use(cors())
 
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
@@ -106,5 +108,5 @@ const unknownEndpoint = (req, res) => {
 
 app.use(unknownEndpoint)
 
-const PORT = 3001
+const PORT = env.process.PORT || 3001
 app.listen(PORT)
